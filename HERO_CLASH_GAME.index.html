@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#101827">
-<title>Hero Clash V9.4 — Cinematic Combat</title>
+<title>Hero Clash V10.0 — Character Combat Overhaul</title>
 <style>
 :root{--bg:#101827;--panel:#19263a;--muted:#9fb0c8;--white:#f5f7fb;--gold:#ffd166}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 0,#263c5c 0,#101827 58%);color:var(--white);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
@@ -165,11 +165,30 @@ button{font:inherit;cursor:pointer;touch-action:manipulation}.primary{width:100%
 .arena.ultimate-tint:after{content:"";position:absolute;inset:0;z-index:17;pointer-events:none;animation:ultimateTint 1.25s ease-out}
 @media (prefers-reduced-motion:reduce){.artbox.ultimate-ready,.artbox.perfect-dodge-ready,.action.perfect-ready{animation:none!important}}
 
+
+/* V10.0 — character-specific combat identity and heavier impact */
+@keyframes garouFlurry{0%{transform:translateX(0) skewX(0)}14%{transform:translateX(13px) skewX(-8deg)}28%{transform:translateX(-8px) skewX(7deg)}42%{transform:translateX(17px) skewX(-10deg)}56%{transform:translateX(-10px) skewX(8deg)}72%{transform:translateX(20px) scale(1.08)}100%{transform:translateX(0) scale(1)}}
+@keyframes saitamaHeavy{0%{transform:scale(1)}30%{transform:scale(1.12) translateX(7px)}55%{transform:scale(.91) translateX(-8px)}72%{transform:scale(1.16)}100%{transform:scale(1)}}
+@keyframes genosBlast{0%{filter:brightness(1)}35%{filter:brightness(1.8) drop-shadow(0 0 16px #ff8b32)}70%{filter:brightness(2.3) drop-shadow(0 0 26px #ff5a24)}100%{filter:brightness(1)}}
+@keyframes tatsuPulse{0%{transform:translateY(0) scale(1)}35%{transform:translateY(-9px) scale(1.06)}70%{transform:translateY(4px) scale(.96)}100%{transform:translateY(0) scale(1)}}
+@keyframes whiteGarouRush{0%{transform:translateX(0) scale(1)}20%{transform:translateX(18px) scale(1.1)}40%{transform:translateX(-10px) scale(1.05)}60%{transform:translateX(22px) scale(1.14)}80%{transform:translateX(-5px) scale(1.08)}100%{transform:translateX(0) scale(1)}}
+.artbox.char-garou.multi-hit{animation:garouFlurry .82s ease-in-out}
+.artbox.char-saitama.heavy-hit{animation:saitamaHeavy .72s cubic-bezier(.15,.8,.2,1)}
+.artbox.char-genos.special-hit{animation:genosBlast .85s ease-out}
+.artbox.char-tatsumaki.special-hit{animation:tatsuPulse .85s ease-in-out}
+.artbox.char-garou_white.multi-hit{animation:whiteGarouRush .78s ease-in-out}
+.artbox.final-impact{filter:brightness(1.8) drop-shadow(0 0 22px #fff) drop-shadow(0 0 28px #ff9b35)}
+.multi-hit-label{position:absolute;z-index:15;left:50%;top:5%;transform:translateX(-50%);font-size:clamp(12px,3.5vw,18px);font-weight:1000;letter-spacing:2px;color:#fff;text-shadow:0 2px 3px #07101d,0 0 12px #59dfff;white-space:nowrap;animation:floatHit .55s ease-out forwards;pointer-events:none}
+.ultimate-charge-pulse{animation:chargePulse .46s ease-in-out 5}
+@keyframes chargePulse{0%,100%{transform:scale(1);filter:brightness(1) drop-shadow(0 0 8px #fff)}45%{transform:scale(1.09);filter:brightness(2) drop-shadow(0 0 24px #69dfff)}70%{transform:scale(1.04);filter:brightness(1.5) drop-shadow(0 0 18px #fff)}}
+.arena.final-impact-shake{animation:arenaShake .16s linear 4}
+@media(prefers-reduced-motion:reduce){.artbox.multi-hit,.artbox.heavy-hit,.artbox.special-hit,.artbox.ultimate-charge-pulse{animation:none!important}}
+
 </style>
 </head>
 <body>
 <main>
- <header class="top"><h1>HERO CLASH</h1><p>V9.4 • Cinematic Combat</p></header>
+ <header class="top"><h1>HERO CLASH</h1><p>V10.0 • Character Combat Overhaul</p></header>
  <section class="panel" id="selectPanel">
   <h2>เลือกตัวละครของคุณ</h2>
   <div class="choices" id="choices"></div>
@@ -187,26 +206,27 @@ button{font:inherit;cursor:pointer;touch-action:manipulation}.primary{width:100%
   <div class="focus-wrap" id="focusWrap"><div class="focus-label"><b>FOCUS</b><span id="focusText">0 / 5</span></div><div class="focus-track"><div class="focus-fill" id="focusFill"></div></div><div class="intent" id="enemyIntent">ศัตรูกำลังประเมินสถานการณ์...</div></div>
   <div class="controls">
    <button class="action" data-action="attack">โจมตีปกติ<small>+20 Energy • ต่อ Combo</small></button>
-   <button class="action" data-action="skill">สกิลพิเศษ<small>ใช้ 30 Energy • Cooldown 2 เทิร์น</small></button>
-   <button class="action special" data-action="ultimate">ULTIMATE<small>ใช้ 70 Energy • Cooldown 4 เทิร์น</small></button>
+   <button class="action" data-action="skill">สกิลพิเศษ<small>ใช้ 30 Energy • ใช้ได้ทุกเทิร์น</small></button>
+   <button class="action special" data-action="ultimate">ULTIMATE<small>ใช้ 70 Energy • ต้องสะสมพลังให้เต็ม</small></button>
    <button class="action guard" data-action="guard">ป้องกัน<small>ลด Damage ครั้งถัดไป 60%</small></button>
    <button class="action dodge" data-action="dodge">เตรียมหลบ<small>โอกาสหลบสำเร็จ 40%</small></button>
-   <button class="action heal" data-action="heal">ตั้งหลัก<small>ฟื้น HP 15 • ใช้ 35 Energy</small></button>
+   <button class="action heal" data-action="heal">ตั้งหลัก<small>ฟื้น HP 40 • ใช้ 35 Energy</small></button>
    <button class="action" id="restartBtn">เริ่มใหม่<small>เริ่มการต่อสู้ใหม่</small></button>
   </div>
  </section>
- <div class="footer">V9.4 • Cinematic combat test</div>
+ <div class="footer">V10.0 • Character Combat Overhaul</div>
 </main>
 <div id="resultOverlay" class="hidden" role="dialog" aria-modal="true"><div class="result-card"><h2 id="resultTitle">VICTORY!</h2><p id="resultMessage">การต่อสู้สิ้นสุดลง</p><div class="result-actions"><button id="rematchBtn">REMATCH</button><button id="selectAgainBtn">CHARACTER SELECT</button></div></div></div>
 <script>
 const heroes=[
- {id:'saitama',name:'Saitama',sub:'พลังหมัด',skin:'#f1c7a4',hair:'#e9e7dc',suit:'#f0c52f',cape:'#e84b4b',fx:'shock'},
- {id:'garou',name:'Garou',sub:'นักสู้หมัดเปล่า',skin:'#d9a27e',hair:'#d9dce7',suit:'#252c43',cape:'#252c43',fx:'flow'},
- {id:'genos',name:'Genos',sub:'ไซบอร์ก',skin:'#e5bd9c',hair:'#e8e8e8',suit:'#d6dce8',cape:'#d6dce8',fx:'beam'},
- {id:'tatsumaki',name:'Tatsumaki',sub:'พลังจิต',skin:'#f0c8b4',hair:'#2d9b55',suit:'#174d38',cape:'#174d38',fx:'psychic'},
- {id:'garou_white',name:'การูหัวหงอก',sub:'ร่างหัวหงอก • พลังโจมตีสูง',skin:'#e6b99d',hair:'#f0f2f5',suit:'#f09a27',cape:'#d9432d',fx:'whiteflow'}
+ {id:'saitama',name:'Saitama',sub:'พลังหมัด',skin:'#f1c7a4',hair:'#e9e7dc',suit:'#f0c52f',cape:'#e84b4b',fx:'shock',normal:25,skill:40,ultimate:150,energyRate:1},
+ {id:'garou',name:'Garou',sub:'นักสู้หมัดเปล่า',skin:'#d9a27e',hair:'#d9dce7',suit:'#252c43',cape:'#252c43',fx:'flow',normal:22,skill:45,ultimate:110,energyRate:1.15},
+ {id:'genos',name:'Genos',sub:'ไซบอร์ก',skin:'#e5bd9c',hair:'#e8e8e8',suit:'#d6dce8',cape:'#d6dce8',fx:'beam',normal:18,skill:65,ultimate:120,energyRate:1.1},
+ {id:'tatsumaki',name:'Tatsumaki',sub:'พลังจิต',skin:'#f0c8b4',hair:'#2d9b55',suit:'#174d38',cape:'#174d38',fx:'psychic',normal:20,skill:50,ultimate:115,energyRate:1.1},
+ {id:'garou_white',name:'การูหัวหงอก',sub:'ร่างหัวหงอก • พลังโจมตีสูง',skin:'#e6b99d',hair:'#f0f2f5',suit:'#f09a27',cape:'#d9432d',fx:'whiteflow',normal:35,skill:75,ultimate:180,energyRate:1.35}
 ];
-let chosen=4,p={hp:100,en:0,guard:false,dodge:false,skillCd:0,ultCd:0},e={hp:100,en:0,guard:false,dodge:false,skillCd:0,ultCd:0},busy=false,enemy;
+const MAX_HP=270;
+let chosen=4,p={hp:MAX_HP,en:0,guard:false,dodge:false,skillCd:0,ultCd:0},e={hp:MAX_HP,en:0,guard:false,dodge:false,skillCd:0,ultCd:0},busy=false,enemy;
 let combo=0,counterReady=false,turn=0,focus=0,enemyIntent='attack',perfectDodgeArmed=false;
 const $=id=>document.getElementById(id);
 function art(h,side='left',fx=false){
@@ -226,22 +246,22 @@ function art(h,side='left',fx=false){
 }
 function renderChoices(){ $('choices').innerHTML=heroes.map((h,i)=>`<button class="choice ${i===chosen?'selected':''}" data-i="${i}">${art(h)}<b>${h.name}</b><small>${h.sub}</small></button>`).join('');document.querySelectorAll('.choice').forEach(b=>b.onclick=()=>{chosen=+b.dataset.i;renderChoices()})}
 function update(){
- $('playerHp').style.width=(p.hp/180*100)+'%';$('enemyHp').style.width=(e.hp/180*100)+'%';
+ $('playerHp').style.width=(p.hp/MAX_HP*100)+'%';$('enemyHp').style.width=(e.hp/MAX_HP*100)+'%';
  $('playerEnergy').style.width=p.en+'%';$('enemyEnergy').style.width=e.en+'%';
- $('playerHpText').textContent=`${p.hp} / 180`;$('enemyHpText').textContent=`${e.hp} / 180`;
+ $('playerHpText').textContent=`${p.hp} / ${MAX_HP}`;$('enemyHpText').textContent=`${e.hp} / ${MAX_HP}`;
  $('playerEnergyText').textContent=`${p.en} / 100`;$('enemyEnergyText').textContent=`${e.en} / 100`;
  $('comboText').textContent=combo>=2?`COMBO x${combo} • ${combo} HITS`:`COMBO ${combo} HIT`;
  document.querySelectorAll('[data-action]').forEach(b=>{let a=b.dataset.action;
   b.disabled=busy||p.hp<=0||e.hp<=0||
-   (a==='skill'&&(p.en<30||p.skillCd>0))||
-   (a==='ultimate'&&(p.en<70||p.ultCd>0))||
-   (a==='heal'&&(p.en<35||p.hp>=180));
+   (a==='skill'&&p.en<30)||
+   (a==='ultimate'&&p.en<70)||
+   (a==='heal'&&(p.en<35||p.hp>=MAX_HP));
   const small=b.querySelector('small');
-  if(small&&a==='skill')small.textContent=`ใช้ 30 Energy • ${p.skillCd?`Cooldown ${p.skillCd}`:'พร้อมใช้'}`;
-  if(small&&a==='ultimate')small.textContent=`ใช้ 70 Energy • ${p.ultCd?`Cooldown ${p.ultCd}`:'พร้อมใช้'}`;
+  if(small&&a==='skill')small.textContent='ใช้ 30 Energy • ใช้ได้ทุกเทิร์น';
+  if(small&&a==='ultimate')small.textContent='ใช้ 70 Energy • ต้องสะสมพลังให้เต็ม';
  });
- const pUltReady=p.en>=70&&p.ultCd===0&&p.hp>0;
- const eUltReady=e.en>=70&&e.ultCd===0&&e.hp>0;
+ const pUltReady=p.en>=70&&p.hp>0;
+ const eUltReady=e.en>=70&&e.hp>0;
  $('playerArt').classList.toggle('ultimate-ready',pUltReady);
  $('enemyArt').classList.toggle('ultimate-ready',eUltReady);
 }
@@ -249,8 +269,8 @@ function log(t){$('log').textContent=t}
 function chooseEnemyIntent(){
  let a='attack';
  if(e.hp<70&&e.en>=35&&Math.random()<.16)a='heal';
- else if(e.en>=70&&e.ultCd===0&&Math.random()<.20)a='ultimate';
- else if(e.en>=30&&e.skillCd===0&&Math.random()<.30)a='skill';
+ else if(e.en>=70&&Math.random()<.20)a='ultimate';
+ else if(e.en>=30&&Math.random()<.30)a='skill';
  else if(Math.random()<.10)a='guard';
  enemyIntent=a;
  const labels={attack:'NORMAL ATTACK',skill:'SPECIAL SKILL',ultimate:'ULTIMATE',guard:'GUARD',heal:'HEAL'};
@@ -265,13 +285,14 @@ function updateFocus(){
 }
 function addFocus(n=1){focus=Math.min(5,focus+n);updateFocus();}
 function start(){
- p={hp:180,en:0,guard:false,dodge:false,skillCd:0,ultCd:0};
- e={hp:180,en:0,guard:false,dodge:false,skillCd:0,ultCd:0};
+ p={hp:MAX_HP,en:0,guard:false,dodge:false,skillCd:0,ultCd:0};
+ e={hp:MAX_HP,en:0,guard:false,dodge:false,skillCd:0,ultCd:0};
  combo=0;counterReady=false;turn=1;focus=0;perfectDodgeArmed=false;
  enemy=heroes[(chosen+1+Math.floor(Math.random()*(heroes.length-1)))%heroes.length];
  $('playerName').textContent=heroes[chosen].name;$('enemyName').textContent='AI • '+enemy.name;
  $('playerArt').classList.add('artbox');$('enemyArt').classList.add('artbox');
  $('playerArt').innerHTML=art(heroes[chosen]);$('enemyArt').innerHTML=art(enemy);
+ $('playerArt').classList.add('char-'+heroes[chosen].id);$('enemyArt').classList.add('char-'+enemy.id);
  $('selectPanel').classList.add('hidden');$('battlePanel').classList.remove('hidden');
  $('turnBanner').textContent='ROUND 1 • YOUR TURN';$('turnBanner').classList.remove('enemy');
  $('battleHint').textContent='เลือก 1 Action ในเทิร์นนี้';log('BATTLE START! คุณเริ่มก่อน');busy=false;chooseEnemyIntent();update();updateFocus();
@@ -280,7 +301,7 @@ function finish(){if(e.hp<=0||p.hp<=0){$('turnBanner').textContent='BATTLE FINIS
 function hit(target,damage){let actual=target.guard?Math.ceil(damage*.4):damage;target.guard=false;target.hp=Math.max(0,target.hp-actual);return actual}
 function rollDamage(base,attacker){let critical=Math.random()<.25;return {damage:Math.round(base*(critical?1.7:1)),critical}}
 function setTurn(isEnemy){$('turnBanner').textContent=isEnemy?'ENEMY TURN':'PLAYER TURN';$('turnBanner').classList.toggle('enemy',isEnemy)}
-function tickCooldowns(actor){if(actor.skillCd>0)actor.skillCd--;if(actor.ultCd>0)actor.ultCd--}
+function tickCooldowns(actor){/* V10.0: no baseline cooldowns; character-specific cooldown effects may be added later. */}
 function showHitReaction(targetId, damage, critical=false, label=''){
  const box=$(targetId); if(!box)return;
  box.classList.remove('hit-react','critical-react'); void box.offsetWidth;
@@ -400,6 +421,16 @@ function wait(ms){return new Promise(resolve=>setTimeout(resolve,ms))}
 function showResult(win){
  busy=true;update();const overlay=$('resultOverlay');$('resultTitle').textContent=win?'VICTORY!':'DEFEAT';$('resultMessage').textContent=win?'คุณเอาชนะคู่ต่อสู้ได้สำเร็จ':'คุณพ่ายแพ้ในการต่อสู้';overlay.classList.remove('hidden');
 }
+function energyGain(actor, amount, hero){actor.en=Math.min(100,actor.en+Math.round(amount*(hero.energyRate||1)));}
+function showMultiHit(targetId, count, final=false){const box=$(targetId);if(!box)return;const tag=document.createElement('div');tag.className='multi-hit-label';tag.textContent=final?'FINAL HIT!':`HIT ${count}`;box.appendChild(tag);setTimeout(()=>tag.remove(),620);}
+async function dealMultiHit(target, targetId, attacker, baseTotal, count, targetHero, isPlayer){
+ let total=0,critAny=false;const weights=count===5?[.16,.17,.18,.20,.29]:count===4?[.20,.22,.25,.33]:[.28,.32,.40];
+ for(let i=0;i<count;i++){let part=Math.round(baseTotal*(weights[i]||1/count));const rolled=rollDamage(part,attacker);const actual=hit(target,rolled.damage);total+=actual;critAny=critAny||rolled.critical;showMultiHit(targetId,i+1,i===count-1);showHitReaction(targetId,actual,rolled.critical);if(i===count-1){$(targetId).classList.add('final-impact');document.querySelector('.arena').classList.remove('final-impact-shake');void document.querySelector('.arena').offsetWidth;document.querySelector('.arena').classList.add('final-impact-shake');setTimeout(()=>$(targetId).classList.remove('final-impact'),380);}
+ update();if(i<count-1)await wait(attacker.id==='garou'?105:attacker.id==='garou_white'?90:145);
+ }
+ showImpact(targetId,attacker,'skill');return {damage:total,critical:critAny};
+}
+function chargeUltimate(artId){const box=$(artId);if(!box)return;box.classList.remove('ultimate-charge-pulse');void box.offsetWidth;box.classList.add('ultimate-charge-pulse');setTimeout(()=>box.classList.remove('ultimate-charge-pulse'),2400);}
 async function playerAction(a){
  if(busy||p.hp<=0||e.hp<=0)return;
  busy=true;update();const h=heroes[chosen];let msg='',d=0,critical=false,actual=0;
@@ -407,16 +438,17 @@ async function playerAction(a){
  announceAction(labels[a],a==='ultimate'?'CHARGING POWER • 2.4 SEC':a==='skill'?'SPECIAL MOVE':'PLAYER ACTION','player',a);
  if(a==='guard'){combo=0;p.guard=true;p.dodge=false;perfectDodgeArmed=false;p.en=Math.min(100,p.en+15);$('playerArt').classList.add('guard-glow');defenseFX('playerArt','guard');msg='GUARD! โล่พร้อมรับการโจมตี ลด Damage 60%';}
  else if(a==='dodge'){combo=0;p.guard=false;p.dodge=true;perfectDodgeArmed=focus>=5;defenseFX('playerArt','dodge');msg=perfectDodgeArmed?'PERFECT DODGE READY!':'DODGE READY!';}
- else if(a==='heal'){combo=0;p.en-=35;p.hp=Math.min(180,p.hp+25);msg='RECOVER! ฟื้นฟู HP 25';}
+ else if(a==='heal'){combo=0;p.en-=35;p.hp=Math.min(MAX_HP,p.hp+40);msg='RECOVER! ฟื้นฟู HP 40';}
  else {
-  if(a==='attack'){combo=Math.min(5,combo+1);d=Math.round(22*(1+(combo-1)*.10));p.en=Math.min(100,p.en+20);}
-  if(a==='skill'){combo=0;p.en-=30;p.skillCd=2;d=36+Math.floor(Math.random()*7);}
-  if(a==='ultimate'){combo=0;p.en-=70;p.ultCd=4;d=68+Math.floor(Math.random()*9);$('playerArt').classList.remove('ultimate-ready');$('playerArt').classList.add('charging');await wait(2400);$('playerArt').classList.remove('charging');}
-  else await wait(a==='skill'?650:420);
-  const r=rollDamage(d,h);d=r.damage;critical=r.critical;actual=hit(e,d);animateAttacker('playerArt','enemyArt',a);if(a==='ultimate')ultimateImpact('enemyArt');showHitReaction('enemyArt',actual,critical);showImpact('enemyArt',h,a);await wait(a==='ultimate'?900:a==='skill'?420:220);
+  if(a==='attack'){combo=Math.min(5,combo+1);d=Math.round(h.normal*(1+(combo-1)*.08));energyGain(p,20,h);}
+  if(a==='skill'){combo=0;p.en-=30;d=h.skill;}
+  if(a==='ultimate'){combo=0;p.en-=70;d=h.ultimate;$('playerArt').classList.remove('ultimate-ready');$('playerArt').classList.add('charging');chargeUltimate('playerArt');announceAction('★ ULTIMATE ACTIVATED!','POWER SURGE • 5 CHARGE PULSES','player','ultimate');await wait(2400);$('playerArt').classList.remove('charging');}
+  if(a==='skill'){animateAttacker('playerArt','enemyArt','skill');$('playerArt').classList.add(h.id==='garou'||h.id==='garou_white'?'multi-hit':h.id==='saitama'?'heavy-hit':'special-hit');await wait(150);const count=h.id==='garou'||h.id==='garou_white'?5:h.id==='genos'?1:h.id==='tatsumaki'?3:1;const result=count>1?await dealMultiHit(e,'enemyArt',h,d,count,enemy,false):(()=>null)();if(count===1){const r=rollDamage(d,h);actual=hit(e,r.damage);critical=r.critical;showHitReaction('enemyArt',actual,critical);showImpact('enemyArt',h,'skill');}else{actual=result.damage;critical=result.critical;}setTimeout(()=>$('playerArt').classList.remove('multi-hit','heavy-hit','special-hit'),900);}
+  else if(a==='ultimate'){animateAttacker('playerArt','enemyArt',a);ultimateImpact('enemyArt');const r=rollDamage(d,h);actual=hit(e,r.damage);critical=r.critical;showHitReaction('enemyArt',actual,critical);showImpact('enemyArt',h,a);await wait(900);}
+  else{await wait(180);const r=rollDamage(d,h);actual=hit(e,r.damage);critical=r.critical;animateAttacker('playerArt','enemyArt',a);showHitReaction('enemyArt',actual,critical);showImpact('enemyArt',h,a);await wait(320);}
   if(a==='attack'){popCombo();msg=`ATTACK! ${combo} HIT COMBO • ${actual} DAMAGE${critical?' • CRITICAL HIT!':''}`;}
-  if(a==='skill')msg=`SPECIAL SKILL! ${actual} DAMAGE${critical?' • CRITICAL HIT!':''}`;
-  if(a==='ultimate')msg=`ULTIMATE! ${actual} DAMAGE${critical?' • CRITICAL HIT!':''}`;
+  if(a==='skill')msg=`${h.name} SPECIAL SKILL! ${actual} DAMAGE${critical?' • CRITICAL HIT!':''}`;
+  if(a==='ultimate')msg=`${h.name} ULTIMATE! ${actual} DAMAGE${critical?' • CRITICAL HIT!':''}`;
  }
  log(msg);$('battleHint').textContent=`ROUND ${turn} • ENEMY INTENT: ${enemyIntent.toUpperCase()}`;update();
  if(e.hp<=0){finish();return;}
@@ -427,16 +459,18 @@ async function enemyTurn(){
  const a=enemyIntent;let msg='',rawDamage=0,critical=false,fx=false;
  const enemyLabels={attack:'⚡ ENEMY ATTACK!',skill:'✦ ENEMY SPECIAL SKILL!',ultimate:'★ ENEMY ULTIMATE!',guard:'🛡 ENEMY GUARD!',heal:'✚ ENEMY RECOVER!'};
  announceAction(enemyLabels[a],a==='ultimate'?'CHARGING POWER • 2.4 SEC':'ENEMY ACTION','enemy',a);
- if(a==='attack'){rawDamage=22+Math.floor(Math.random()*5);e.en=Math.min(100,e.en+20);const r=rollDamage(rawDamage,enemy);rawDamage=r.damage;critical=r.critical;fx=true;}
- if(a==='skill'){e.en-=30;e.skillCd=2;rawDamage=36+Math.floor(Math.random()*7);const r=rollDamage(rawDamage,enemy);rawDamage=r.damage;critical=r.critical;fx=true;}
- if(a==='ultimate'){e.en-=70;e.ultCd=4;rawDamage=68+Math.floor(Math.random()*9);const r=rollDamage(rawDamage,enemy);rawDamage=r.damage;critical=r.critical;fx=true;$('enemyArt').classList.remove('ultimate-ready');$('enemyArt').classList.add('charging');await wait(2400);$('enemyArt').classList.remove('charging');}
+ if(a==='attack'){rawDamage=enemy.normal;e.en=Math.min(100,e.en+15);const r=rollDamage(rawDamage,enemy);rawDamage=r.damage;critical=r.critical;fx=true;}
+ if(a==='skill'){e.en-=30;rawDamage=enemy.skill;const r=rollDamage(rawDamage,enemy);rawDamage=r.damage;critical=r.critical;fx=true;}
+ if(a==='ultimate'){e.en-=70;rawDamage=enemy.ultimate;const r=rollDamage(rawDamage,enemy);rawDamage=r.damage;critical=r.critical;fx=true;$('enemyArt').classList.remove('ultimate-ready');$('enemyArt').classList.add('charging');chargeUltimate('enemyArt');await wait(2400);$('enemyArt').classList.remove('charging');}
  if(a==='guard'){e.guard=true;e.en=Math.min(100,e.en+15);defenseFX('enemyArt','guard');msg='ENEMY GUARD! ศัตรูตั้งโล่ป้องกัน';}
- if(a==='heal'){e.en-=35;e.hp=Math.min(180,e.hp+25);msg='ENEMY RECOVER! ศัตรูฟื้นฟู HP 25';}
+ if(a==='heal'){e.en-=35;e.hp=Math.min(MAX_HP,e.hp+40);msg='ENEMY RECOVER! ศัตรูฟื้นฟู HP 40';}
  if(fx){animateAttacker('enemyArt','playerArt',a);if(a==='ultimate')ultimateImpact('playerArt');await wait(a==='ultimate'?450:360);
   if(p.dodge){p.dodge=false;$('playerArt').classList.remove('dodge-glow');const chance=perfectDodgeArmed?1:.40;const success=Math.random()<chance;
-   if(success){defenseFX('playerArt','dodge');if(perfectDodgeArmed){focus=0;perfectDodgeArmed=false;updateFocus();msg='PERFECT DODGE! การโจมตีพลาดเป้า';}else msg='DODGE SUCCESS! หลบการโจมตีได้';p.en=Math.min(100,p.en+10);}
-   else{const actual=hit(p,rawDamage);addFocus(1);showHitReaction('playerArt',actual,critical);showImpact('playerArt',enemy,a);msg=`DODGE FAILED! รับ ${actual} DAMAGE${critical?' • CRITICAL HIT!':''}`;}
-  }else{const wasGuard=p.guard;const actual=hit(p,rawDamage);p.guard=false;$('playerArt').classList.remove('guard-glow');if(wasGuard){defenseFX('playerArt','guard');addFocus(1);msg=`BLOCKED! โล่รับการโจมตี • ${actual} DAMAGE`;}
+   if(success){defenseFX('playerArt','dodge');if(perfectDodgeArmed){focus=0;perfectDodgeArmed=false;updateFocus();msg='PERFECT DODGE! การโจมตีพลาดเป้า';}else msg='DODGE SUCCESS! หลบการโจมตีได้';energyGain(p,12,heroes[chosen]);}
+   else{const actual=hit(p,rawDamage);energyGain(p,8,heroes[chosen]);addFocus(1);showHitReaction('playerArt',actual,critical);showImpact('playerArt',enemy,a);msg=`DODGE FAILED! รับ ${actual} DAMAGE${critical?' • CRITICAL HIT!':''}`;}
+  }else if(a==='skill'&&(enemy.id==='garou'||enemy.id==='garou_white')&&!p.guard){
+   const weights=[.16,.17,.18,.20,.29];let total=0,anyCrit=false;for(let i=0;i<5;i++){const rr=rollDamage(Math.round(enemy.skill*weights[i]),enemy);const actual=hit(p,rr.damage);total+=actual;anyCrit=anyCrit||rr.critical;showMultiHit('playerArt',i+1,i===4);showHitReaction('playerArt',actual,rr.critical);energyGain(p,8,heroes[chosen]);addFocus(1);if(i<4)await wait(enemy.id==='garou_white'?90:105);}showImpact('playerArt',enemy,'skill');msg=`ENEMY ${a.toUpperCase()}! 5 HITS • ${total} DAMAGE${anyCrit?' • CRITICAL HIT!':''}`;
+  }else{const wasGuard=p.guard;const actual=hit(p,rawDamage);energyGain(p,8,heroes[chosen]);p.guard=false;$('playerArt').classList.remove('guard-glow');if(wasGuard){defenseFX('playerArt','guard');addFocus(1);msg=`BLOCKED! โล่รับการโจมตี • ${actual} DAMAGE`;}
    else{addFocus(1);msg=`ENEMY ${a.toUpperCase()}! ${actual} DAMAGE${critical?' • CRITICAL HIT!':''}`;}
    showHitReaction('playerArt',actual,critical);showImpact('playerArt',enemy,a);
   }
