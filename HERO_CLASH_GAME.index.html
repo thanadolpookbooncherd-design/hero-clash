@@ -184,11 +184,59 @@ button{font:inherit;cursor:pointer;touch-action:manipulation}.primary{width:100%
 .arena.final-impact-shake{animation:arenaShake .16s linear 4}
 @media(prefers-reduced-motion:reduce){.artbox.multi-hit,.artbox.heavy-hit,.artbox.special-hit,.artbox.ultimate-charge-pulse{animation:none!important}}
 
+
+/* V10.1 — stronger character-specific effects, reliable charge sequence and action callouts */
+.action-banner.attack-call{border-color:#b9f4ff;background:linear-gradient(135deg,#06334aef,#101827f5);box-shadow:0 0 18px #42d9ff,0 0 42px #167fff88;text-shadow:0 0 12px #4bdcff}
+.action-banner.enemy-call{border-color:#ffb5a8;background:linear-gradient(135deg,#4b1420ef,#101827f5);box-shadow:0 0 18px #ff554f,0 0 42px #ff2d4588}
+.action-banner .action-word{display:block;font-size:clamp(23px,5vw,38px);font-weight:1000;letter-spacing:3px}
+.action-banner .banner-kicker{font-size:10px}
+.charge-aura{position:absolute;z-index:12;inset:-8% -5%;pointer-events:none;border-radius:50%;opacity:0;mix-blend-mode:screen}
+.charge-aura:before,.charge-aura:after{content:"";position:absolute;inset:12%;border:3px solid var(--charge-color,#fff);border-radius:50%;box-shadow:0 0 14px var(--charge-color,#fff),inset 0 0 16px var(--charge-color,#fff);}
+.charge-aura:after{inset:27%;border-style:dashed;border-width:2px;}
+.charge-aura.active{opacity:1;animation:chargeAuraSpin 2.4s linear forwards}
+@keyframes chargeAuraSpin{0%{transform:scale(.72) rotate(0);opacity:.15;filter:brightness(1)}15%{transform:scale(.86) rotate(55deg);opacity:.65}32%{transform:scale(.94) rotate(130deg);opacity:.35}50%{transform:scale(1.04) rotate(205deg);opacity:.9}68%{transform:scale(1.10) rotate(275deg);opacity:.48}86%{transform:scale(1.18) rotate(335deg);opacity:1}100%{transform:scale(1.28) rotate(420deg);opacity:0}}
+.charge-flash{position:absolute;z-index:13;inset:0;pointer-events:none;border-radius:16px;animation:chargeFlash .38s ease-out forwards}
+@keyframes chargeFlash{0%{opacity:0;box-shadow:inset 0 0 0 0 var(--charge-color,#fff)}35%{opacity:1;box-shadow:inset 0 0 28px 7px var(--charge-color,#fff),0 0 28px var(--charge-color,#fff)}100%{opacity:0;box-shadow:inset 0 0 0 0 var(--charge-color,#fff)}}
+.artbox.charge-active img,.artbox.charge-active svg{filter:brightness(1.12) drop-shadow(0 0 10px var(--charge-color,#fff));}
+.charge-stage-1 img,.charge-stage-1 svg{filter:brightness(1.18) drop-shadow(0 0 12px var(--charge-color,#fff))!important}
+.charge-stage-2 img,.charge-stage-2 svg{filter:brightness(1.32) drop-shadow(0 0 17px var(--charge-color,#fff))!important}
+.charge-stage-3 img,.charge-stage-3 svg{filter:brightness(1.48) drop-shadow(0 0 22px var(--charge-color,#fff))!important}
+.charge-stage-4 img,.charge-stage-4 svg{filter:brightness(1.65) drop-shadow(0 0 28px var(--charge-color,#fff))!important}
+.charge-stage-5 img,.charge-stage-5 svg{filter:brightness(1.85) drop-shadow(0 0 34px var(--charge-color,#fff))!important}
+.charge-stage-6 img,.charge-stage-6 svg{filter:brightness(2.05) drop-shadow(0 0 42px var(--charge-color,#fff))!important}
+.ultimate-vfx{position:absolute;z-index:19;inset:-12%;pointer-events:none;overflow:visible;animation:ultVfxIn 1.2s ease-out forwards}
+@keyframes ultVfxIn{0%{opacity:0;transform:scale(.18)}12%{opacity:1;transform:scale(.72)}35%{opacity:1;transform:scale(1.12)}100%{opacity:0;transform:scale(1.65)}}
+.ultimate-vfx:before,.ultimate-vfx:after{content:"";position:absolute;left:50%;top:50%;width:75%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;border:var(--ring-width,7px) solid var(--ult-color,#fff);box-shadow:0 0 18px var(--ult-color,#fff),inset 0 0 18px var(--ult-color,#fff);}
+.ultimate-vfx:after{width:48%;border-style:dashed;border-width:3px;transform:translate(-50%,-50%) rotate(25deg)}
+.ultimate-vfx .ult-core{position:absolute;left:50%;top:50%;width:35%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,#fff 0 5%,var(--ult-core,#fff) 22%,transparent 72%);filter:blur(2px)}
+.ultimate-vfx.saitama{--ult-color:#ffd45c;--ult-core:#ff8c2b;--ring-width:10px}
+.ultimate-vfx.garou{--ult-color:#83eaff;--ult-core:#e9fbff;--ring-width:5px}
+.ultimate-vfx.genos{--ult-color:#ff873c;--ult-core:#fff0a8;--ring-width:9px}
+.ultimate-vfx.tatsumaki{--ult-color:#65f39a;--ult-core:#b8ffd0;--ring-width:5px}
+.ultimate-vfx.garou_white{--ult-color:#d9f7ff;--ult-core:#77dfff;--ring-width:8px}
+.ultimate-vfx.garou:before{border-radius:42% 58% 50% 50%;transform:translate(-50%,-50%) rotate(35deg);border-width:8px 3px 5px 10px}
+.ultimate-vfx.garou_white:before{border-style:dashed;box-shadow:0 0 25px #9beaff,inset 0 0 22px #fff}
+.ultimate-vfx.genos:before{border-radius:18%;transform:translate(-50%,-50%) rotate(45deg)}
+.ultimate-vfx.tatsumaki:before,.ultimate-vfx.tatsumaki:after{border-radius:50%;border-style:dotted;box-shadow:0 0 22px #58ff9b,inset 0 0 20px #58ff9b}
+.ultimate-vfx .ult-rays{position:absolute;inset:0;background:repeating-conic-gradient(from 0deg at 50% 50%,var(--ult-color) 0deg 1deg,transparent 1deg 15deg);mask:radial-gradient(circle,transparent 0 24%,#000 30% 58%,transparent 72%);opacity:.8}
+.ultimate-vfx.garou .ult-rays{background:repeating-conic-gradient(from 0deg at 50% 50%,#eaffff 0deg 1.2deg,transparent 1.2deg 9deg)}
+.ultimate-vfx.tatsumaki .ult-rays{background:repeating-conic-gradient(from 0deg at 50% 50%,#73ffab 0deg 1deg,transparent 1deg 22deg);}
+.ultimate-vfx.genos .ult-rays{background:repeating-conic-gradient(from 0deg at 50% 50%,#ff9a43 0deg 2deg,transparent 2deg 12deg)}
+.multi-hit-label.garou-hit{color:#d9f8ff;text-shadow:0 0 8px #39caff,0 0 18px #fff;font-size:clamp(14px,4vw,21px)}
+.multi-hit-label.garou-hit.final{font-size:clamp(19px,5vw,27px);color:#fff;border:2px solid #baf5ff;padding:4px 10px;border-radius:9px;background:#06334abf}
+.impact.garou-enhanced svg{filter:drop-shadow(0 0 12px #48d7ff) drop-shadow(0 0 20px #fff)}
+.impact.tatsu-enhanced svg{filter:drop-shadow(0 0 14px #4bff91)}
+.impact.genos-enhanced svg{filter:drop-shadow(0 0 14px #ff7b29)}
+.impact.saitama-enhanced svg{filter:drop-shadow(0 0 14px #ffd34f)}
+@keyframes garouFinalBurst{0%{transform:scale(.7);filter:brightness(1)}35%{transform:scale(1.25);filter:brightness(2.2) drop-shadow(0 0 24px #65eaff)}100%{transform:scale(1);filter:brightness(1)}}
+.artbox.char-garou.final-impact{animation:garouFinalBurst .42s ease-out!important}
+@media(prefers-reduced-motion:reduce){.charge-aura.active,.ultimate-vfx,.charge-flash{animation:none!important;opacity:.75}.charge-stage-1 img,.charge-stage-2 img,.charge-stage-3 img,.charge-stage-4 img,.charge-stage-5 img,.charge-stage-6 img{filter:brightness(1.35)!important}}
+
 </style>
 </head>
 <body>
 <main>
- <header class="top"><h1>HERO CLASH</h1><p>V10.0 • Character Combat Overhaul</p></header>
+ <header class="top"><h1>HERO CLASH</h1><p>V10.1 • Ultimate & Impact Polish</p></header>
  <section class="panel" id="selectPanel">
   <h2>เลือกตัวละครของคุณ</h2>
   <div class="choices" id="choices"></div>
@@ -214,7 +262,7 @@ button{font:inherit;cursor:pointer;touch-action:manipulation}.primary{width:100%
    <button class="action" id="restartBtn">เริ่มใหม่<small>เริ่มการต่อสู้ใหม่</small></button>
   </div>
  </section>
- <div class="footer">V10.0 • Character Combat Overhaul</div>
+ <div class="footer">V10.1 • Ultimate & Impact Polish</div>
 </main>
 <div id="resultOverlay" class="hidden" role="dialog" aria-modal="true"><div class="result-card"><h2 id="resultTitle">VICTORY!</h2><p id="resultMessage">การต่อสู้สิ้นสุดลง</p><div class="result-actions"><button id="rematchBtn">REMATCH</button><button id="selectAgainBtn">CHARACTER SELECT</button></div></div></div>
 <script>
@@ -328,7 +376,7 @@ function showImpact(targetId, attacker, move='attack'){
   psychic:`<g fill="none" stroke="#69f09a" stroke-width="5"><circle cx="88" cy="78" r="58" stroke-dasharray="12 8"><animateTransform attributeName="transform" type="rotate" from="0 88 78" to="180 88 78" dur=".65s" fill="freeze"/></circle><circle cx="88" cy="78" r="35" stroke-dasharray="5 7"/></g><g fill="#8cffb0" stroke="#d8ffe4" stroke-width="2"><path d="M28 42l12-17 10 20-12 8z M126 108l13-16 13 18-16 7z M72 12l8-9 9 13-11 6z"/></g>`
  };
  const svg=visuals[attacker.fx]||visuals.flow;
- const overlay=document.createElement('div');overlay.className='impact';
+ const overlay=document.createElement('div');overlay.className='impact '+({shock:'saitama-enhanced',flow:'garou-enhanced',beam:'genos-enhanced',psychic:'tatsu-enhanced'}[attacker.fx]||'');
  overlay.innerHTML=`<svg viewBox="0 0 176 160" aria-hidden="true">${svg}</svg>`;
  box.appendChild(overlay);setTimeout(()=>overlay.remove(),900);
 }
@@ -398,19 +446,23 @@ function animateAttacker(attackerId,targetId,move='attack'){
 }
 function announceAction(text,sub='',side='player',move='attack'){
  const arena=document.querySelector('.arena');const old=arena.querySelector('.action-banner');if(old)old.remove();
- const el=document.createElement('div');el.className='action-banner'+(move==='ultimate'?' ultimate-call':'');
+ const el=document.createElement('div');
+ el.className='action-banner'+(move==='ultimate'?' ultimate-call':'')+(move==='attack'?(side==='enemy'?' enemy-call':' attack-call'):'');
  el.style.left=side==='enemy'?'76%':'24%';
- const kicker=move==='ultimate'?'ULTIMATE SEQUENCE':move==='skill'?'SPECIAL TECHNIQUE':move==='attack'?'BASIC COMBAT MOVE':'ACTION';
- el.innerHTML=`${text}${sub?`<small class="banner-kicker">${sub||kicker}</small>`:''}`;
- arena.appendChild(el);setTimeout(()=>el.remove(),move==='ultimate'?2350:1450);
+ const word=move==='attack'?(side==='enemy'?'ENEMY ATTACK':'ATTACK'):text;
+ el.innerHTML=`<span class="action-word">${word}</span>${sub?`<small class="banner-kicker">${sub}</small>`:''}`;
+ arena.appendChild(el);setTimeout(()=>{if(el.isConnected)el.remove()},move==='ultimate'?2450:move==='attack'?1150:1450);
 }
-function ultimateImpact(targetId){
+function ultimateImpact(targetId,hero){
  const arena=document.querySelector('.arena');if(!arena)return;
  arena.classList.remove('ultimate-shake','ultimate-tint');void arena.offsetWidth;
  arena.classList.add('ultimate-shake','ultimate-tint');
- const old=arena.querySelector('.ultimate-impact');if(old)old.remove();
- const burst=document.createElement('div');burst.className='ultimate-impact';
- const target=$(targetId);if(target){target.appendChild(burst);setTimeout(()=>burst.remove(),1350)}
+ const target=$(targetId);if(target){
+  target.querySelectorAll('.ultimate-vfx').forEach(x=>x.remove());
+  const v=document.createElement('div');v.className='ultimate-vfx '+(hero?.id||'saitama');
+  v.innerHTML='<div class="ult-rays"></div><div class="ult-core"></div>';
+  target.appendChild(v);setTimeout(()=>v.remove(),1300);
+ }
  setTimeout(()=>arena.classList.remove('ultimate-shake','ultimate-tint'),1350);
 }
 function defenseFX(targetId,type){
@@ -422,15 +474,32 @@ function showResult(win){
  busy=true;update();const overlay=$('resultOverlay');$('resultTitle').textContent=win?'VICTORY!':'DEFEAT';$('resultMessage').textContent=win?'คุณเอาชนะคู่ต่อสู้ได้สำเร็จ':'คุณพ่ายแพ้ในการต่อสู้';overlay.classList.remove('hidden');
 }
 function energyGain(actor, amount, hero){actor.en=Math.min(100,actor.en+Math.round(amount*(hero.energyRate||1)));}
-function showMultiHit(targetId, count, final=false){const box=$(targetId);if(!box)return;const tag=document.createElement('div');tag.className='multi-hit-label';tag.textContent=final?'FINAL HIT!':`HIT ${count}`;box.appendChild(tag);setTimeout(()=>tag.remove(),620);}
+function showMultiHit(targetId, count, final=false, attacker=null){const box=$(targetId);if(!box)return;const tag=document.createElement('div');tag.className='multi-hit-label'+(attacker?.id==='garou'?' garou-hit':'')+(final?' final':'');tag.textContent=final?'FINAL HIT!':`HIT ${count}`;box.appendChild(tag);setTimeout(()=>tag.remove(),620);}
 async function dealMultiHit(target, targetId, attacker, baseTotal, count, targetHero, isPlayer){
  let total=0,critAny=false;const weights=count===5?[.16,.17,.18,.20,.29]:count===4?[.20,.22,.25,.33]:[.28,.32,.40];
- for(let i=0;i<count;i++){let part=Math.round(baseTotal*(weights[i]||1/count));const rolled=rollDamage(part,attacker);const actual=hit(target,rolled.damage);total+=actual;critAny=critAny||rolled.critical;showMultiHit(targetId,i+1,i===count-1);showHitReaction(targetId,actual,rolled.critical);if(i===count-1){$(targetId).classList.add('final-impact');document.querySelector('.arena').classList.remove('final-impact-shake');void document.querySelector('.arena').offsetWidth;document.querySelector('.arena').classList.add('final-impact-shake');setTimeout(()=>$(targetId).classList.remove('final-impact'),380);}
+ for(let i=0;i<count;i++){let part=Math.round(baseTotal*(weights[i]||1/count));const rolled=rollDamage(part,attacker);const actual=hit(target,rolled.damage);total+=actual;critAny=critAny||rolled.critical;showMultiHit(targetId,i+1,i===count-1,attacker);showHitReaction(targetId,actual,rolled.critical);if(i===count-1){$(targetId).classList.add('final-impact');document.querySelector('.arena').classList.remove('final-impact-shake');void document.querySelector('.arena').offsetWidth;document.querySelector('.arena').classList.add('final-impact-shake');setTimeout(()=>$(targetId).classList.remove('final-impact'),380);}
  update();if(i<count-1)await wait(attacker.id==='garou'?105:attacker.id==='garou_white'?90:145);
  }
  showImpact(targetId,attacker,'skill');return {damage:total,critical:critAny};
 }
-function chargeUltimate(artId){const box=$(artId);if(!box)return;box.classList.remove('ultimate-charge-pulse');void box.offsetWidth;box.classList.add('ultimate-charge-pulse');setTimeout(()=>box.classList.remove('ultimate-charge-pulse'),2400);}
+async function chargeUltimate(artId,hero){
+ const box=$(artId);if(!box)return;
+ const colors={saitama:'#ffd45c',garou:'#76eaff',genos:'#ff873c',tatsumaki:'#65f39a',garou_white:'#d9f7ff'};
+ const color=colors[hero?.id]||'#fff';box.style.setProperty('--charge-color',color);
+ box.classList.add('charge-active');
+ const aura=document.createElement('div');aura.className='charge-aura active';aura.style.setProperty('--charge-color',color);box.appendChild(aura);
+ const stages=[1,2,3,4,5,6];
+ for(const stage of stages){
+  box.classList.remove('charge-stage-1','charge-stage-2','charge-stage-3','charge-stage-4','charge-stage-5','charge-stage-6');
+  box.classList.add('charge-stage-'+stage);
+  const flash=document.createElement('div');flash.className='charge-flash';flash.style.setProperty('--charge-color',color);box.appendChild(flash);
+  setTimeout(()=>flash.remove(),420);
+  if(stage===4||stage===6){const ring=document.createElement('div');ring.className='charge-aura active';ring.style.setProperty('--charge-color',color);ring.style.inset=stage===4?'-16%':'-24%';box.appendChild(ring);setTimeout(()=>ring.remove(),620);}
+  await wait(400);
+ }
+ aura.remove();box.classList.remove('charge-active','charge-stage-1','charge-stage-2','charge-stage-3','charge-stage-4','charge-stage-5','charge-stage-6');
+ box.style.removeProperty('--charge-color');
+}
 async function playerAction(a){
  if(busy||p.hp<=0||e.hp<=0)return;
  busy=true;update();const h=heroes[chosen];let msg='',d=0,critical=false,actual=0;
@@ -442,9 +511,9 @@ async function playerAction(a){
  else {
   if(a==='attack'){combo=Math.min(5,combo+1);d=Math.round(h.normal*(1+(combo-1)*.08));energyGain(p,20,h);}
   if(a==='skill'){combo=0;p.en-=30;d=h.skill;}
-  if(a==='ultimate'){combo=0;p.en-=70;d=h.ultimate;$('playerArt').classList.remove('ultimate-ready');$('playerArt').classList.add('charging');chargeUltimate('playerArt');announceAction('★ ULTIMATE ACTIVATED!','POWER SURGE • 5 CHARGE PULSES','player','ultimate');await wait(2400);$('playerArt').classList.remove('charging');}
+  if(a==='ultimate'){combo=0;p.en-=70;d=h.ultimate;$('playerArt').classList.remove('ultimate-ready');$('playerArt').classList.add('charging');chargeUltimate('playerArt',h);announceAction('★ ULTIMATE ACTIVATED!','POWER SURGE • 5 CHARGE PULSES','player','ultimate');await wait(2400);$('playerArt').classList.remove('charging');}
   if(a==='skill'){animateAttacker('playerArt','enemyArt','skill');$('playerArt').classList.add(h.id==='garou'||h.id==='garou_white'?'multi-hit':h.id==='saitama'?'heavy-hit':'special-hit');await wait(150);const count=h.id==='garou'||h.id==='garou_white'?5:h.id==='genos'?1:h.id==='tatsumaki'?3:1;const result=count>1?await dealMultiHit(e,'enemyArt',h,d,count,enemy,false):(()=>null)();if(count===1){const r=rollDamage(d,h);actual=hit(e,r.damage);critical=r.critical;showHitReaction('enemyArt',actual,critical);showImpact('enemyArt',h,'skill');}else{actual=result.damage;critical=result.critical;}setTimeout(()=>$('playerArt').classList.remove('multi-hit','heavy-hit','special-hit'),900);}
-  else if(a==='ultimate'){animateAttacker('playerArt','enemyArt',a);ultimateImpact('enemyArt');const r=rollDamage(d,h);actual=hit(e,r.damage);critical=r.critical;showHitReaction('enemyArt',actual,critical);showImpact('enemyArt',h,a);await wait(900);}
+  else if(a==='ultimate'){animateAttacker('playerArt','enemyArt',a);ultimateImpact('enemyArt',h);const r=rollDamage(d,h);actual=hit(e,r.damage);critical=r.critical;showHitReaction('enemyArt',actual,critical);showImpact('enemyArt',h,a);await wait(900);}
   else{await wait(180);const r=rollDamage(d,h);actual=hit(e,r.damage);critical=r.critical;animateAttacker('playerArt','enemyArt',a);showHitReaction('enemyArt',actual,critical);showImpact('enemyArt',h,a);await wait(320);}
   if(a==='attack'){popCombo();msg=`ATTACK! ${combo} HIT COMBO • ${actual} DAMAGE${critical?' • CRITICAL HIT!':''}`;}
   if(a==='skill')msg=`${h.name} SPECIAL SKILL! ${actual} DAMAGE${critical?' • CRITICAL HIT!':''}`;
@@ -461,10 +530,10 @@ async function enemyTurn(){
  announceAction(enemyLabels[a],a==='ultimate'?'CHARGING POWER • 2.4 SEC':'ENEMY ACTION','enemy',a);
  if(a==='attack'){rawDamage=enemy.normal;e.en=Math.min(100,e.en+15);const r=rollDamage(rawDamage,enemy);rawDamage=r.damage;critical=r.critical;fx=true;}
  if(a==='skill'){e.en-=30;rawDamage=enemy.skill;const r=rollDamage(rawDamage,enemy);rawDamage=r.damage;critical=r.critical;fx=true;}
- if(a==='ultimate'){e.en-=70;rawDamage=enemy.ultimate;const r=rollDamage(rawDamage,enemy);rawDamage=r.damage;critical=r.critical;fx=true;$('enemyArt').classList.remove('ultimate-ready');$('enemyArt').classList.add('charging');chargeUltimate('enemyArt');await wait(2400);$('enemyArt').classList.remove('charging');}
+ if(a==='ultimate'){e.en-=70;rawDamage=enemy.ultimate;const r=rollDamage(rawDamage,enemy);rawDamage=r.damage;critical=r.critical;fx=true;$('enemyArt').classList.remove('ultimate-ready');$('enemyArt').classList.add('charging');chargeUltimate('enemyArt',enemy);await wait(2400);$('enemyArt').classList.remove('charging');}
  if(a==='guard'){e.guard=true;e.en=Math.min(100,e.en+15);defenseFX('enemyArt','guard');msg='ENEMY GUARD! ศัตรูตั้งโล่ป้องกัน';}
  if(a==='heal'){e.en-=35;e.hp=Math.min(MAX_HP,e.hp+40);msg='ENEMY RECOVER! ศัตรูฟื้นฟู HP 40';}
- if(fx){animateAttacker('enemyArt','playerArt',a);if(a==='ultimate')ultimateImpact('playerArt');await wait(a==='ultimate'?450:360);
+ if(fx){animateAttacker('enemyArt','playerArt',a);if(a==='ultimate')ultimateImpact('playerArt',enemy);await wait(a==='ultimate'?450:360);
   if(p.dodge){p.dodge=false;$('playerArt').classList.remove('dodge-glow');const chance=perfectDodgeArmed?1:.40;const success=Math.random()<chance;
    if(success){defenseFX('playerArt','dodge');if(perfectDodgeArmed){focus=0;perfectDodgeArmed=false;updateFocus();msg='PERFECT DODGE! การโจมตีพลาดเป้า';}else msg='DODGE SUCCESS! หลบการโจมตีได้';energyGain(p,12,heroes[chosen]);}
    else{const actual=hit(p,rawDamage);energyGain(p,8,heroes[chosen]);addFocus(1);showHitReaction('playerArt',actual,critical);showImpact('playerArt',enemy,a);msg=`DODGE FAILED! รับ ${actual} DAMAGE${critical?' • CRITICAL HIT!':''}`;}
