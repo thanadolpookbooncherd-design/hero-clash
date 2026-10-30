@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#101827">
-<title>Hero Clash V9.3 — Combat Animation Rebuild</title>
+<title>Hero Clash V9.4 — Cinematic Combat</title>
 <style>
 :root{--bg:#101827;--panel:#19263a;--muted:#9fb0c8;--white:#f5f7fb;--gold:#ffd166}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 0,#263c5c 0,#101827 58%);color:var(--white);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
@@ -139,11 +139,37 @@ button{font:inherit;cursor:pointer;touch-action:manipulation}.primary{width:100%
 .result-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}.result-actions button{border:0;border-radius:11px;padding:12px 6px;font-weight:900;background:#ffd166;color:#172338}.result-actions button:last-child{background:#344b69;color:white}
 @media (prefers-reduced-motion:reduce){.action-banner,.artbox.charging,.artbox.guard-pose,.artbox.dodge-pose{animation-duration:.01ms!important}}
 
+
+/* V9.4 cinematic combat pass */
+@keyframes readyAura{0%,100%{filter:drop-shadow(0 0 5px #ffe27a) drop-shadow(0 0 12px #ff9e32)}50%{filter:drop-shadow(0 0 13px #fff1a6) drop-shadow(0 0 28px #ff9e32) brightness(1.22)}}
+@keyframes dodgeAura{0%,100%{filter:drop-shadow(0 0 5px #72eaff) drop-shadow(0 0 12px #29bfff)}50%{filter:drop-shadow(0 0 13px #c5f7ff) drop-shadow(0 0 27px #29bfff) brightness(1.2)}}
+.artbox.ultimate-ready{animation:readyAura 1.35s ease-in-out infinite}
+.artbox.perfect-dodge-ready{animation:dodgeAura 1.15s ease-in-out infinite}
+.action.perfect-ready{border:2px solid #8cecff!important;box-shadow:0 0 9px #35cfff, inset 0 0 12px #35cfff55;animation:focusPulse .9s ease-in-out infinite alternate;color:#e7fbff}
+.action-banner{top:17%;min-width:130px;max-width:46%;white-space:normal;line-height:1.05;padding:10px 14px;font-size:clamp(17px,3.8vw,28px);border-color:#ffe7a0;box-shadow:0 0 18px currentColor,0 0 38px #ff9e3266}
+.action-banner.ultimate-call{font-size:clamp(21px,5vw,38px);border-color:#fff0a6;background:linear-gradient(135deg,#31134fef,#101827f2);box-shadow:0 0 22px #ffb52e,0 0 55px #ff4f2e99;text-shadow:0 0 14px #ff9d32}
+.action-banner .banner-kicker{font-size:10px;letter-spacing:2px;display:block;margin-top:5px;color:#ffe9b0}
+@keyframes bannerIn{0%{opacity:0;transform:translate(-50%,-35%) scale(.55)}12%,78%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-65%) scale(1.08)}}
+@keyframes cinematicCharge{0%{transform:scale(1);filter:brightness(1) drop-shadow(0 0 0 transparent)}25%{transform:scale(1.035);filter:brightness(1.35) drop-shadow(0 0 14px #55dfff)}60%{transform:scale(1.075);filter:brightness(1.9) drop-shadow(0 0 30px #ffb52e)}85%{transform:scale(1.09);filter:brightness(2.2) drop-shadow(0 0 42px #fff0a6)}100%{transform:scale(1.02);filter:brightness(1.5) drop-shadow(0 0 25px #ff7d2d)}}
+.artbox.charging{animation:cinematicCharge 2.35s ease-in-out both!important}
+@keyframes longLungeRight{0%{transform:translateX(0) scale(1)}18%{transform:translateX(-9px) scale(.97)}45%{transform:translateX(38px) scale(1.12)}68%{transform:translateX(30px) scale(1.08)}100%{transform:translateX(0) scale(1)}}
+@keyframes longLungeLeft{0%{transform:translateX(0) scale(1)}18%{transform:translateX(9px) scale(.97)}45%{transform:translateX(-38px) scale(1.12)}68%{transform:translateX(-30px) scale(1.08)}100%{transform:translateX(0) scale(1)}}
+.artbox.move-attack-right{animation:longLungeRight .82s cubic-bezier(.2,.8,.2,1)}.artbox.move-attack-left{animation:longLungeLeft .82s cubic-bezier(.2,.8,.2,1)}
+@keyframes ultimateFlash{0%{opacity:0;transform:scale(.15)}12%{opacity:.95;transform:scale(.7)}28%{opacity:.85;transform:scale(1.25)}55%{opacity:.55;transform:scale(1.8)}100%{opacity:0;transform:scale(2.4)}}
+@keyframes ultimateRing{0%{opacity:0;transform:translate(-50%,-50%) scale(.15)}18%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(2.7)}}
+.ultimate-impact{position:absolute;z-index:18;left:50%;top:50%;width:min(70vw,440px);aspect-ratio:1;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);background:radial-gradient(circle,#fff 0 4%,#fff4b5 9%,#ffb12d88 24%,#ff5d2480 42%,transparent 70%);filter:blur(2px);animation:ultimateFlash 1.15s ease-out forwards}
+.ultimate-impact:before,.ultimate-impact:after{content:"";position:absolute;inset:12%;border:8px solid #fff4c4;border-radius:50%;box-shadow:0 0 25px #ff9e32, inset 0 0 25px #ff9e32;animation:ultimateRing 1.25s ease-out forwards}
+.ultimate-impact:after{inset:25%;border-color:#ff9d35;animation-delay:.12s}
+.arena.ultimate-shake{animation:arenaShake .62s ease-out 2}
+@keyframes ultimateTint{0%,100%{background:transparent}18%{background:#fff2b522}25%{background:#ff8c2422}35%{background:transparent}}
+.arena.ultimate-tint:after{content:"";position:absolute;inset:0;z-index:17;pointer-events:none;animation:ultimateTint 1.25s ease-out}
+@media (prefers-reduced-motion:reduce){.artbox.ultimate-ready,.artbox.perfect-dodge-ready,.action.perfect-ready{animation:none!important}}
+
 </style>
 </head>
 <body>
 <main>
- <header class="top"><h1>HERO CLASH</h1><p>V9.3 • Combat Animation Rebuild</p></header>
+ <header class="top"><h1>HERO CLASH</h1><p>V9.4 • Cinematic Combat</p></header>
  <section class="panel" id="selectPanel">
   <h2>เลือกตัวละครของคุณ</h2>
   <div class="choices" id="choices"></div>
@@ -169,7 +195,7 @@ button{font:inherit;cursor:pointer;touch-action:manipulation}.primary{width:100%
    <button class="action" id="restartBtn">เริ่มใหม่<small>เริ่มการต่อสู้ใหม่</small></button>
   </div>
  </section>
- <div class="footer">V9.3 • Combat animation test</div>
+ <div class="footer">V9.4 • Cinematic combat test</div>
 </main>
 <div id="resultOverlay" class="hidden" role="dialog" aria-modal="true"><div class="result-card"><h2 id="resultTitle">VICTORY!</h2><p id="resultMessage">การต่อสู้สิ้นสุดลง</p><div class="result-actions"><button id="rematchBtn">REMATCH</button><button id="selectAgainBtn">CHARACTER SELECT</button></div></div></div>
 <script>
@@ -214,6 +240,10 @@ function update(){
   if(small&&a==='skill')small.textContent=`ใช้ 30 Energy • ${p.skillCd?`Cooldown ${p.skillCd}`:'พร้อมใช้'}`;
   if(small&&a==='ultimate')small.textContent=`ใช้ 70 Energy • ${p.ultCd?`Cooldown ${p.ultCd}`:'พร้อมใช้'}`;
  });
+ const pUltReady=p.en>=70&&p.ultCd===0&&p.hp>0;
+ const eUltReady=e.en>=70&&e.ultCd===0&&e.hp>0;
+ $('playerArt').classList.toggle('ultimate-ready',pUltReady);
+ $('enemyArt').classList.toggle('ultimate-ready',eUltReady);
 }
 function log(t){$('log').textContent=t}
 function chooseEnemyIntent(){
@@ -229,9 +259,9 @@ function chooseEnemyIntent(){
 function updateFocus(){
  $('focusText').textContent=`${focus} / 5`;$('focusFill').style.width=(focus*20)+'%';
  $('focusWrap').classList.toggle('ready',focus>=5);
- $('playerArt').classList.remove('power-ready');
+ $('playerArt').classList.toggle('perfect-dodge-ready',focus>=5);
  const dodgeBtn=document.querySelector('[data-action="dodge"]');
- if(dodgeBtn){dodgeBtn.firstChild.textContent=focus>=5?'PERFECT DODGE':'เตรียมหลบ';const sm=dodgeBtn.querySelector('small');if(sm)sm.textContent=focus>=5?'พร้อมใช้ • หลบสำเร็จ 100%':'โอกาสหลบสำเร็จ 40%';}
+ if(dodgeBtn){dodgeBtn.classList.toggle('perfect-ready',focus>=5);dodgeBtn.firstChild.textContent=focus>=5?'PERFECT DODGE':'เตรียมหลบ';const sm=dodgeBtn.querySelector('small');if(sm)sm.textContent=focus>=5?'พร้อมใช้ • หลบสำเร็จ 100%':'โอกาสหลบสำเร็จ 40%';}
 }
 function addFocus(n=1){focus=Math.min(5,focus+n);updateFocus();}
 function start(){
@@ -339,13 +369,28 @@ function playWhiteGarouFX(targetId,move){
  requestAnimationFrame(frame);
 }
 function animateAttacker(attackerId,targetId,move='attack'){
- const el=$(attackerId);if(!el)return;el.classList.remove('attacker-lunge-left','attacker-lunge-right');void el.offsetWidth;
- el.classList.add(attackerId==='playerArt'?'attacker-lunge-right':'attacker-lunge-left');
- setTimeout(()=>el.classList.remove('attacker-lunge-left','attacker-lunge-right'),520);
+ const el=$(attackerId);if(!el)return;
+ el.classList.remove('attacker-lunge-left','attacker-lunge-right','move-attack-right','move-attack-left');void el.offsetWidth;
+ const cls=attackerId==='playerArt'?'move-attack-right':'move-attack-left';
+ el.classList.add(cls);
+ setTimeout(()=>el.classList.remove(cls),900);
 }
-function announceAction(text,sub=''){
+function announceAction(text,sub='',side='player',move='attack'){
  const arena=document.querySelector('.arena');const old=arena.querySelector('.action-banner');if(old)old.remove();
- const el=document.createElement('div');el.className='action-banner';el.innerHTML=`${text}${sub?`<small>${sub}</small>`:''}`;arena.appendChild(el);setTimeout(()=>el.remove(),1000);
+ const el=document.createElement('div');el.className='action-banner'+(move==='ultimate'?' ultimate-call':'');
+ el.style.left=side==='enemy'?'76%':'24%';
+ const kicker=move==='ultimate'?'ULTIMATE SEQUENCE':move==='skill'?'SPECIAL TECHNIQUE':move==='attack'?'BASIC COMBAT MOVE':'ACTION';
+ el.innerHTML=`${text}${sub?`<small class="banner-kicker">${sub||kicker}</small>`:''}`;
+ arena.appendChild(el);setTimeout(()=>el.remove(),move==='ultimate'?2350:1450);
+}
+function ultimateImpact(targetId){
+ const arena=document.querySelector('.arena');if(!arena)return;
+ arena.classList.remove('ultimate-shake','ultimate-tint');void arena.offsetWidth;
+ arena.classList.add('ultimate-shake','ultimate-tint');
+ const old=arena.querySelector('.ultimate-impact');if(old)old.remove();
+ const burst=document.createElement('div');burst.className='ultimate-impact';
+ const target=$(targetId);if(target){target.appendChild(burst);setTimeout(()=>burst.remove(),1350)}
+ setTimeout(()=>arena.classList.remove('ultimate-shake','ultimate-tint'),1350);
 }
 function defenseFX(targetId,type){
  const box=$(targetId);if(!box)return;box.classList.remove('guard-pose','dodge-pose');void box.offsetWidth;box.classList.add(type==='guard'?'guard-pose':'dodge-pose');
@@ -359,35 +404,35 @@ async function playerAction(a){
  if(busy||p.hp<=0||e.hp<=0)return;
  busy=true;update();const h=heroes[chosen];let msg='',d=0,critical=false,actual=0;
  const labels={attack:'⚡ ATTACK!',skill:'✦ SPECIAL SKILL!',ultimate:'★ ULTIMATE ACTIVATED!',guard:'🛡 GUARD!',dodge:'💨 DODGE!',heal:'✚ RECOVER!'};
- announceAction(labels[a],a==='ultimate'?'POWER CHARGING…':a==='skill'?'SPECIAL MOVE':'PLAYER ACTION');
+ announceAction(labels[a],a==='ultimate'?'CHARGING POWER • 2.4 SEC':a==='skill'?'SPECIAL MOVE':'PLAYER ACTION','player',a);
  if(a==='guard'){combo=0;p.guard=true;p.dodge=false;perfectDodgeArmed=false;p.en=Math.min(100,p.en+15);$('playerArt').classList.add('guard-glow');defenseFX('playerArt','guard');msg='GUARD! โล่พร้อมรับการโจมตี ลด Damage 60%';}
  else if(a==='dodge'){combo=0;p.guard=false;p.dodge=true;perfectDodgeArmed=focus>=5;defenseFX('playerArt','dodge');msg=perfectDodgeArmed?'PERFECT DODGE READY!':'DODGE READY!';}
  else if(a==='heal'){combo=0;p.en-=35;p.hp=Math.min(180,p.hp+25);msg='RECOVER! ฟื้นฟู HP 25';}
  else {
   if(a==='attack'){combo=Math.min(5,combo+1);d=Math.round(22*(1+(combo-1)*.10));p.en=Math.min(100,p.en+20);}
   if(a==='skill'){combo=0;p.en-=30;p.skillCd=2;d=36+Math.floor(Math.random()*7);}
-  if(a==='ultimate'){combo=0;p.en-=70;p.ultCd=4;d=68+Math.floor(Math.random()*9);$('playerArt').classList.remove('power-ready');$('playerArt').classList.add('charging');await wait(900);$('playerArt').classList.remove('charging');}
-  else await wait(a==='skill'?360:180);
-  const r=rollDamage(d,h);d=r.damage;critical=r.critical;actual=hit(e,d);animateAttacker('playerArt','enemyArt',a);showHitReaction('enemyArt',actual,critical);showImpact('enemyArt',h,a);
+  if(a==='ultimate'){combo=0;p.en-=70;p.ultCd=4;d=68+Math.floor(Math.random()*9);$('playerArt').classList.remove('ultimate-ready');$('playerArt').classList.add('charging');await wait(2400);$('playerArt').classList.remove('charging');}
+  else await wait(a==='skill'?650:420);
+  const r=rollDamage(d,h);d=r.damage;critical=r.critical;actual=hit(e,d);animateAttacker('playerArt','enemyArt',a);if(a==='ultimate')ultimateImpact('enemyArt');showHitReaction('enemyArt',actual,critical);showImpact('enemyArt',h,a);await wait(a==='ultimate'?900:a==='skill'?420:220);
   if(a==='attack'){popCombo();msg=`ATTACK! ${combo} HIT COMBO • ${actual} DAMAGE${critical?' • CRITICAL HIT!':''}`;}
   if(a==='skill')msg=`SPECIAL SKILL! ${actual} DAMAGE${critical?' • CRITICAL HIT!':''}`;
   if(a==='ultimate')msg=`ULTIMATE! ${actual} DAMAGE${critical?' • CRITICAL HIT!':''}`;
  }
  log(msg);$('battleHint').textContent=`ROUND ${turn} • ENEMY INTENT: ${enemyIntent.toUpperCase()}`;update();
  if(e.hp<=0){finish();return;}
- setTurn(true);$('turnBanner').textContent=`ROUND ${turn} • ENEMY TURN`;await wait(a==='ultimate'?700:450);enemyTurn();
+ setTurn(true);$('turnBanner').textContent=`ROUND ${turn} • ENEMY TURN`;await wait(a==='ultimate'?1250:650);enemyTurn();
 }
 async function enemyTurn(){
  if(e.hp<=0||p.hp<=0){finish();return;}
  const a=enemyIntent;let msg='',rawDamage=0,critical=false,fx=false;
  const enemyLabels={attack:'⚡ ENEMY ATTACK!',skill:'✦ ENEMY SPECIAL SKILL!',ultimate:'★ ENEMY ULTIMATE!',guard:'🛡 ENEMY GUARD!',heal:'✚ ENEMY RECOVER!'};
- announceAction(enemyLabels[a],a==='ultimate'?'POWER CHARGING…':'ENEMY ACTION');
+ announceAction(enemyLabels[a],a==='ultimate'?'CHARGING POWER • 2.4 SEC':'ENEMY ACTION','enemy',a);
  if(a==='attack'){rawDamage=22+Math.floor(Math.random()*5);e.en=Math.min(100,e.en+20);const r=rollDamage(rawDamage,enemy);rawDamage=r.damage;critical=r.critical;fx=true;}
  if(a==='skill'){e.en-=30;e.skillCd=2;rawDamage=36+Math.floor(Math.random()*7);const r=rollDamage(rawDamage,enemy);rawDamage=r.damage;critical=r.critical;fx=true;}
- if(a==='ultimate'){e.en-=70;e.ultCd=4;rawDamage=68+Math.floor(Math.random()*9);const r=rollDamage(rawDamage,enemy);rawDamage=r.damage;critical=r.critical;fx=true;$('enemyArt').classList.add('charging');await wait(850);$('enemyArt').classList.remove('charging');}
+ if(a==='ultimate'){e.en-=70;e.ultCd=4;rawDamage=68+Math.floor(Math.random()*9);const r=rollDamage(rawDamage,enemy);rawDamage=r.damage;critical=r.critical;fx=true;$('enemyArt').classList.remove('ultimate-ready');$('enemyArt').classList.add('charging');await wait(2400);$('enemyArt').classList.remove('charging');}
  if(a==='guard'){e.guard=true;e.en=Math.min(100,e.en+15);defenseFX('enemyArt','guard');msg='ENEMY GUARD! ศัตรูตั้งโล่ป้องกัน';}
  if(a==='heal'){e.en-=35;e.hp=Math.min(180,e.hp+25);msg='ENEMY RECOVER! ศัตรูฟื้นฟู HP 25';}
- if(fx){animateAttacker('enemyArt','playerArt',a);await wait(260);
+ if(fx){animateAttacker('enemyArt','playerArt',a);if(a==='ultimate')ultimateImpact('playerArt');await wait(a==='ultimate'?450:360);
   if(p.dodge){p.dodge=false;$('playerArt').classList.remove('dodge-glow');const chance=perfectDodgeArmed?1:.40;const success=Math.random()<chance;
    if(success){defenseFX('playerArt','dodge');if(perfectDodgeArmed){focus=0;perfectDodgeArmed=false;updateFocus();msg='PERFECT DODGE! การโจมตีพลาดเป้า';}else msg='DODGE SUCCESS! หลบการโจมตีได้';p.en=Math.min(100,p.en+10);}
    else{const actual=hit(p,rawDamage);addFocus(1);showHitReaction('playerArt',actual,critical);showImpact('playerArt',enemy,a);msg=`DODGE FAILED! รับ ${actual} DAMAGE${critical?' • CRITICAL HIT!':''}`;}
